@@ -8,14 +8,30 @@ import {fortuneService} from "./fortuneService.js";
 export const TodoController = () => {
 
     const Todo = () => {                                // facade
-        const textAttr = Observable("text");            // we currently don't expose it as we don't use it elsewhere
+        const textAttr = Observable("TEXT");            // we currently don't expose it as we don't use it elsewhere
         const doneAttr = Observable(false);
         const errorAttr = Observable("");
+
+        const setText = text => {
+            text = text.trim().toLocaleUpperCase();
+
+            textAttr.setValue(text);
+
+            let   errorText = "";
+            if (text.length < 5) {
+                errorText = "Todo must be at least 5 characters.";
+            } else if (text.length > 40) {
+                errorText = "Todo must be at most 40 characters.";
+            }
+
+            errorAttr.setValue(errorText);
+        };
+
         return {
             getDone:        doneAttr.getValue,
             setDone:        doneAttr.setValue,
             onDoneChanged:  doneAttr.onChange,
-            setText:        textAttr.setValue,
+            setText:        setText,
             getText:        textAttr.getValue,
             onTextChanged:  textAttr.onChange,
             setError:       errorAttr.setValue,
@@ -92,7 +108,10 @@ export const TodoItemsView = (todoController, rootElement) => {
         } );
 
         todo.onTextChanged(() => inputElement.value = todo.getText());
-        todo.onErrorChanged(() => inputElement.setCustomValidity(todo.getError()));
+        todo.onErrorChanged(() => {
+            inputElement.setCustomValidity(todo.getError())
+            inputElement.reportValidity();
+        });
 
         rootElement.appendChild(deleteButton);
         rootElement.appendChild(inputElement);
