@@ -73,12 +73,13 @@ export const TodoItemsView = (todoController, rootElement) => {
             template.innerHTML = `
                 <button class="delete">&times;</button>
                 <input type="text" size="42">
-                <input type="checkbox">            
+                <input type="checkbox">
             `;
             return template.children;
         }
         const [deleteButton, inputElement, checkboxElement] = createElements();
 
+        inputElement.oninput = _ => todo.setText(inputElement.value);
         checkboxElement.onclick = _ => todo.setDone(checkboxElement.checked);
         deleteButton.onclick    = _ => todoController.removeTodo(todo);
 
@@ -91,6 +92,7 @@ export const TodoItemsView = (todoController, rootElement) => {
         } );
 
         todo.onTextChanged(() => inputElement.value = todo.getText());
+        todo.onErrorChanged(() => inputElement.setCustomValidity(todo.getError()));
 
         rootElement.appendChild(deleteButton);
         rootElement.appendChild(inputElement);
