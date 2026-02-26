@@ -10,13 +10,17 @@ export const TodoController = () => {
     const Todo = () => {                                // facade
         const textAttr = Observable("text");            // we currently don't expose it as we don't use it elsewhere
         const doneAttr = Observable(false);
+        const errorAttr = Observable("");
         return {
-            getDone:       doneAttr.getValue,
-            setDone:       doneAttr.setValue,
-            onDoneChanged: doneAttr.onChange,
-            setText:       textAttr.setValue,
-            getText:       textAttr.getValue,
-            onTextChanged: textAttr.onChange,
+            getDone:        doneAttr.getValue,
+            setDone:        doneAttr.setValue,
+            onDoneChanged:  doneAttr.onChange,
+            setText:        textAttr.setValue,
+            getText:        textAttr.getValue,
+            onTextChanged:  textAttr.onChange,
+            setError:       errorAttr.setValue,
+            getError:       errorAttr.getValue,
+            onErrorChanged: errorAttr.onChange,
         }
     };
 
