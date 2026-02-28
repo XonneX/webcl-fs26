@@ -1,19 +1,56 @@
 // requires ../observable/observable.js
 // requires ./fortuneService.js
 // requires ../dataflow/dataflow.js
+const toUpperCase = text => text.toLocaleUpperCase();
+const lengthValidatorMax = (max) => {
+    return text => {
+        if (text.length > max) {
+            return `Text must be at shorter than ${max} characters.`;
+        }
+        return "";
+    }
+}
+const lengthValidatorMin = (min) => {
+    return text => {
+        if (text.length < min) {
+            return `Text must be at least ${min} characters long.`;
+        }
+        return "";
+    }
+}
 
 const TodoController = () => {
 
-    const Todo = () => {                                // facade
-        const textAttr = Observable("text");            // we currently don't expose it as we don't use it elsewhere
-        const doneAttr = Observable(false);
+    const Todo = () => {
+        const textAttr = ObservableWithValidation(
+            ObservableWithTransformers(
+                Observable("text"), [toUpperCase],
+            ), [lengthValidatorMax(20), lengthValidatorMin(3)]);
+
+        // Only allow checking a Todo when it's valid
+        const doneAttr = ObservableWithTransformers(Observable(false), [(newValue) => {
+            if (textAttr.getValidationResult() === "") {
+                return newValue;
+            }
+            return false;
+        }]);
+
+        // Uncheck invalid Todos
+        textAttr.onValidationChange((validationResult) => {
+            if (textAttr.getValidationResult() === "") {
+                return;
+            }
+            doneAttr.setValue(false);
+        });
+
         return {
-            getDone:       doneAttr.getValue,
-            setDone:       doneAttr.setValue,
-            onDoneChanged: doneAttr.onChange,
-            setText:       textAttr.setValue,
-            getText:       textAttr.getValue,
-            onTextChanged: textAttr.onChange,
+            getDone:            doneAttr.getValue,
+            setDone:            doneAttr.setValue,
+            onDoneChanged:      doneAttr.onChange,
+            setText:            textAttr.setValue,
+            getText:            textAttr.getValue,
+            onTextChanged:      textAttr.onChange,
+            onValidationChange: textAttr.onValidationChange,
         }
     };
 
@@ -72,7 +109,11 @@ const TodoItemsView = (todoController, rootElement) => {
         }
         const [deleteButton, inputElement, checkboxElement] = createElements();
 
-        checkboxElement.onclick = _ => todo.setDone(checkboxElement.checked);
+        inputElement.oninput = _ => todo.setText(inputElement.value);
+        checkboxElement.onclick = _ => {
+            todo.setDone(checkboxElement.checked);
+            checkboxElement.checked = todo.getDone();
+        }
         deleteButton.onclick    = _ => todoController.removeTodo(todo);
 
         todoController.onTodoRemove( (removedTodo, removeMe) => {
@@ -84,6 +125,11 @@ const TodoItemsView = (todoController, rootElement) => {
         } );
 
         todo.onTextChanged(() => inputElement.value = todo.getText());
+        todo.onDoneChanged(() => checkboxElement.checked = todo.getDone());
+        todo.onValidationChange(msg => {
+            inputElement.setCustomValidity(msg);
+            inputElement.reportValidity();
+        });
 
         rootElement.appendChild(deleteButton);
         rootElement.appendChild(inputElement);

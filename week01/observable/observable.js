@@ -42,3 +42,45 @@ const ObservableList = list => {
         countIf: pred => list.reduce( (sum, item) => pred(item) ? sum + 1 : sum, 0)
     }
 };
+
+const ObservableWithTransformers = (observable, transformers) => {
+    let value = observable.getValue();
+    transformers.forEach(t => value = t(value));
+    observable.setValue(value);
+    return {
+        onChange: observable.onChange,
+        getValue: observable.getValue,
+        setValue: newValue => {
+            let v = newValue;
+            transformers.forEach(t => v = t(v));
+            observable.setValue(v);
+        }
+    }
+};
+
+const ObservableWithValidation = (observable, validators) => {
+    const validationListeners = [];
+    let validationResult = "";
+    observable.onChange((newValue, _) => {
+        // validation
+        const oldValidationResult = validationResult;
+        for (let v of validators) {
+            validationResult = v(newValue);
+            if (validationResult === "") {
+                continue;
+            }
+            break;
+        }
+        if (oldValidationResult === validationResult) {
+            return;
+        }
+        validationListeners.forEach(callback => callback(validationResult));
+    });
+    return {
+        onChange: observable.onChange,
+        getValue: observable.getValue,
+        setValue: observable.setValue,
+        getValidationResult: () => validationResult,
+        onValidationChange: (callback) => validationListeners.push(callback),
+    }
+};
