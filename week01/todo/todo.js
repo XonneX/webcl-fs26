@@ -5,6 +5,24 @@ import {ObservableList, Observable} from "../observable/observable.js";
 import {Scheduler} from "../dataflow/dataflow.js";
 import {fortuneService} from "./fortuneService.js";
 
+const toUpperCase = text => text.toLocaleUpperCase();
+const lengthValidatorMax = (max) => {
+    return text => {
+        if (text.length > max) {
+            return `Text must be at shorter than ${max} characters.`;
+        }
+        return "";
+    }
+}
+const lengthValidatorMin = (min) => {
+    return text => {
+        if (text.length < min) {
+            return `Text must be at least ${min} characters long.`;
+        }
+        return "";
+    }
+}
+
 export const TodoController = () => {
 
     const Todo = () => {                                // facade
@@ -12,18 +30,29 @@ export const TodoController = () => {
         const doneAttr = Observable(false);
         const errorAttr = Observable("");
 
+        const transformers = [
+            toUpperCase,
+        ];
+
+        const validators = [
+            lengthValidatorMax(20),
+            lengthValidatorMin(3),
+        ];
+
         const setText = text => {
-            text = text.trim().toLocaleUpperCase();
-
+            console.log(text);
+            transformers.forEach(transformer => text = transformer(text));
             textAttr.setValue(text);
+            console.log(text);
 
-            let   errorText = "";
-            if (text.length < 5) {
-                errorText = "Todo must be at least 5 characters.";
-            } else if (text.length > 40) {
-                errorText = "Todo must be at most 40 characters.";
-            }
+            let errorText = "";
+            validators.forEach(validator => {
+                let newErrorText = validator(text);
 
+                if (newErrorText !== "") {
+                    errorText = newErrorText;
+                }
+            })
             errorAttr.setValue(errorText);
         };
 
