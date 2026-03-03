@@ -1,6 +1,6 @@
 
 
-const Observable = value => {
+export const Observable = value => {
     const listeners = [];
     return {
         onChange: callback => {
@@ -18,7 +18,7 @@ const Observable = value => {
 };
 
 
-const ObservableList = list => {
+export const ObservableList = list => {
     const addListeners = [];
     const delListeners = [];
     const removeAt     = array => index => array.splice(index, 1);

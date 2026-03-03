@@ -1,6 +1,6 @@
 
 // execute asynchronous tasks in strict sequence
-const Scheduler = () => {
+export const Scheduler = () => {
     let inProcess = false;
     const tasks = [];
     function process() {

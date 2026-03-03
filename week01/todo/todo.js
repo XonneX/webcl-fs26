@@ -1,8 +1,11 @@
 // requires ../observable/observable.js
 // requires ./fortuneService.js
 // requires ../dataflow/dataflow.js
+import {ObservableList, Observable} from "../observable/observable.js";
+import {Scheduler} from "../dataflow/dataflow.js";
+import {fortuneService} from "./fortuneService.js";
 
-const TodoController = () => {
+export const TodoController = () => {
 
     const Todo = () => {                                // facade
         const textAttr = Observable("text");            // we currently don't expose it as we don't use it elsewhere
@@ -57,7 +60,7 @@ const TodoController = () => {
 
 // View-specific parts
 
-const TodoItemsView = (todoController, rootElement) => {
+export const TodoItemsView = (todoController, rootElement) => {
 
     const render = todo => {
 
@@ -97,7 +100,7 @@ const TodoItemsView = (todoController, rootElement) => {
     // we do not expose anything as the view is totally passive.
 };
 
-const TodoTotalView = (todoController, numberOfTasksElement) => {
+export const TodoTotalView = (todoController, numberOfTasksElement) => {
 
     const render = () =>
         numberOfTasksElement.innerText = "" + todoController.numberOfTodos();
@@ -108,7 +111,7 @@ const TodoTotalView = (todoController, numberOfTasksElement) => {
     todoController.onTodoRemove(render);
 };
 
-const TodoOpenView = (todoController, numberOfOpenTasksElement) => {
+export const TodoOpenView = (todoController, numberOfOpenTasksElement) => {
 
     const render = () =>
         numberOfOpenTasksElement.textContent = "" + todoController.numberOfOpenTasks();

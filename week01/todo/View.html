@@ -11,8 +11,8 @@
     <h1>Todo List</h1>
 
     <div>
-        <button id="plus" autofocus onclick="todoController.addTodo();"> + </button>
-        <button id="fortune"        onclick="todoController.addFortuneTodo();"> fortune! </button>
+        <button id="plus" autofocus > + </button>
+        <button id="fortune"        > fortune! </button>
 
         <div class="table" id="todoContainer"></div>
 
@@ -22,11 +22,9 @@
 </main>
 
 
-<script src="../observable/observable.js" ></script>
-<script src="../dataflow/dataflow.js"></script>
-<script src="fortuneService.js"></script>
-<script src="todo.js"></script>
-<script>
+<script type="module">
+    import {TodoController, TodoItemsView, TodoTotalView, TodoOpenView} from './todo.js';
+
     const todoController = TodoController();
 
     TodoItemsView(todoController, document.getElementById('todoContainer'));
@@ -34,6 +32,9 @@
     TodoOpenView (todoController, document.getElementById('openTasks'));
 
     todoController.addTodo();
+
+    document.getElementById('plus').onclick = todoController.addTodo;
+    document.getElementById('fortune').onclick = todoController.addFortuneTodo;
 
 </script>
 
