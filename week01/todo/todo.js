@@ -23,21 +23,21 @@ const lengthValidatorMin = (min) => {
     }
 }
 
+const transformers = [
+    toUpperCase,
+];
+
+const validators = [
+    lengthValidatorMax(20),
+    lengthValidatorMin(3),
+];
+
 export const TodoController = () => {
 
     const Todo = () => {                                // facade
         const textAttr = Observable("TEXT");            // we currently don't expose it as we don't use it elsewhere
         const doneAttr = Observable(false);
         const errorAttr = Observable("");
-
-        const transformers = [
-            toUpperCase,
-        ];
-
-        const validators = [
-            lengthValidatorMax(20),
-            lengthValidatorMin(3),
-        ];
 
         const setText = text => {
             transformers.forEach(transformer => text = transformer(text));
