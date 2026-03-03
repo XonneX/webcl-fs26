@@ -40,10 +40,8 @@ export const TodoController = () => {
         ];
 
         const setText = text => {
-            console.log(text);
             transformers.forEach(transformer => text = transformer(text));
             textAttr.setValue(text);
-            console.log(text);
 
             let errorText = "";
             validators.forEach(validator => {
