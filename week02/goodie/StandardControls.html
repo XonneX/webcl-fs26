@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <title>Standard HTML Input Controls</title>
     <style>
+        .inputs {
+            display: grid;
+            grid-template-columns: max-content max-content;
+            gap: .1rlh 1rem;
+        }
+        :invalid {
+            background-color: #f002;
+            box-shadow: 0 0 0 .3em dodgerblue;
+        }
 
     </style>
     <script>
@@ -18,7 +27,7 @@
         <option>third</option>
     </datalist>
     <div class = "inputs">
-        <label for="t1">text</label>            <input id="t1"  type="text" >
+        <label for="t1">text</label>            <input id="t1"  type="text" required>
         <label for="t1l">datalist</label>       <input id="t1l" type="text" list="choices">
         <label for="t13">password</label>       <input id="t13" type="password">
         <label for="t17">search</label>         <input id="t17" type="search">

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title> All Tests from Module</title>
+</head>
+<body>
+
+<h1>All Tests Suite loaded asynchronously.</h1>
+
+<p>Module tests do not work from file in most browsers (but it works with Chrome in debugging mode).</p>
+<p>They must be loaded via http or the browser SOP check and caching must be disabled :-(.</p>
+
+<pre id="out"></pre>
+
+<hr/>
+<p>182 Tests expected</p>
+<p id="grossTotal">0 Tests</p>
+
+<script type="module">
+
+    import './allTestsSuite.js';
+
+    import { total } from "./test/test.js";
+    window["grossTotal"].textContent = "" + total + " Tests";
+
+</script>
+
+
+</body>
+</html>
