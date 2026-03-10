@@ -9,16 +9,22 @@
                 --font-base-scale: 1.62;    /* default scale is golden ratio, to be overridden */
             }
             h1, h2, h3, h4, h5 {
-                --font-size-factor: 1;      /* default, to be overridden */
-                font-size: calc( var(--font-size-factor) * var(--font-base-unit));
+                --header-importance: 0;
+                --_font-size-factor:  pow(var(--font-base-scale), var(--header-importance));
+                font-size: clamp(
+                        1em,
+                        var(--_font-size-factor) * var(--font-base-unit),
+                        100vh
+                );
             }
-            h1 {--font-size-factor: calc( pow(var(--font-base-scale), 3));}
-            h2 {--font-size-factor: calc( pow(var(--font-base-scale), 2));}
-            h3 {--font-size-factor: calc( pow(var(--font-base-scale), 1));}
-            h4 {--font-size-factor: calc( pow(var(--font-base-scale), 0));}
-            h5 {--font-size-factor: calc( pow(var(--font-base-scale),-1));}
+            h1 {--header-importance: 3;}
+            h2 {--header-importance: 2;}
+            h3 {--header-importance: 1;}
+            h4 {--header-importance: 0;}
+            h5 {--header-importance:-1;}
             .document    { --font-base-scale: 1.62; }
             .application { --font-base-scale: 1.2;  }
+            .application { --font-base-unit: 2vmax;  }
         </style>
     </head>
     <body class="document">
