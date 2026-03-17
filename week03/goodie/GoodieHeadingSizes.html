@@ -10,21 +10,21 @@
             }
             h1, h2, h3, h4, h5 {
                 --header-importance: 0;
-                --_font-size-factor:  pow(var(--font-base-scale), var(--header-importance));
+                --_font-size-factor: pow(var(--font-base-scale), var(--header-importance));
                 font-size: clamp(
-                        1em,
-                        var(--_font-size-factor) * var(--font-base-unit),
-                        100vh
-                );
+                               1em,
+                               var(--_font-size-factor) * var(--font-base-unit),
+                               100vh
+                           );
             }
-            h1 {--header-importance: 3;}
-            h2 {--header-importance: 2;}
-            h3 {--header-importance: 1;}
-            h4 {--header-importance: 0;}
-            h5 {--header-importance:-1;}
+            h1 { --header-importance: 3;}
+            h2 { --header-importance: 2;}
+            h3 { --header-importance: 1;}
+            h4 { --header-importance: 0;}
+            h5 { --header-importance:-1;}
             .document    { --font-base-scale: 1.62; }
             .application { --font-base-scale: 1.2;  }
-            .application { --font-base-unit: 2vmax;  }
+            .application { --font-base-unit : 2vmax;  }
         </style>
     </head>
     <body class="document">
