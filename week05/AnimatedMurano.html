@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <title>Animated Murano</title>
+    <style>
+
+        body {
+            margin-inline:  2em;
+            container-type: inline-size;
+        }
+        @property --progress {
+            syntax:        "<number>";
+            initial-value: 0;
+            inherits:      true;
+        }
+        @keyframes progress {
+            from { --progress: 0;}
+            to   { --progress: 1;}
+        }
+        .line {
+            --element-height: 50px;
+            --max-stretch-at: 20;
+            --progress:       min(1, calc(100cqi / (var(--max-stretch-at) * var(--element-height))));
+            margin-block:     2em;
+            display:          flex;
+            width:            calc((var(--progress) * 100cqi ));
+            &:hover {
+                animation: progress 1s ease-out alternate infinite;
+            }
+        }
+        .element {
+            height:           var(--element-height);
+            aspect-ratio:     1 / 1;
+            background-color: black;
+            border-radius:    10%;
+        }
+        .connector {
+            flex-grow:        1;
+            flex-shrink:      1;
+            width:            0;
+            background-color: hsl(from red h s calc(l * var(--progress)));
+            clip-path:        shape(
+                                  from 0 0,
+                                  curve to 100% 0% with 50% calc(var(--progress) * 70%),
+                                  vline to 100%,
+                                  curve to 0% 100% with 50% calc(100% - var(--progress) * 70%)
+                              );;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="line">
+    <div class="element"></div>
+    <div class="element connector"></div>
+    <div class="element"></div>
+</div>
+
+
+
+<script>
+
+</script>
+
+</body>
+
+</html>
