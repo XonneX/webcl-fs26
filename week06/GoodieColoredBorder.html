@@ -14,12 +14,24 @@
             --borderWidth:  3em;
             --_angle:       0deg;
 
-            border:         var(--borderWidth) solid transparent;
+            border:         var(--borderWidth) solid #0000;
             border-radius:  calc(var(--borderWidth) * 2);
-            /*background:*/
-            /**/
-            /*;*/
-            animation: rundummeli 5s infinite linear;
+            background:
+                linear-gradient(Canvas,Canvas) padding-box,
+                conic-gradient(
+                    from var(--_angle)
+                    in hsl longer hue,
+                    red, red
+                ) border-box;
+            ;
+            transition: all .5s ease-in-out;
+            &:hover {
+                corner-shape: bevel;
+                border-radius: 30%;
+                animation:
+                    rundummeli 5s infinite linear
+            ;
+            }
         }
         @property --_angle {
           syntax:           "<angle>";
@@ -39,6 +51,10 @@
 <body>
 
 <div class="exampleDiv animatedRainbow"></div>
+<button
+    class="animatedRainbow"
+    style="--borderWidth: 2px"
+> Hallo </button>
 
 </body>
 

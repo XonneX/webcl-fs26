@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Popover</title>
+    <style>
+
+        body {
+            margin:         4em;
+            display:        flex;
+            flex-direction: column;
+            gap:            3em;
+        }
+
+        #popover3:popover-open {
+            border-color: red;
+            inset:        50px auto auto 50px;
+        }
+
+        /*#source3 {*/
+        /*    anchor-name: --⚓︎-pop3;*/
+        /*}*/
+        /*#popover3 {*/
+        /*    position: absolute;*/
+        /*    position-anchor:    --⚓︎-pop3;*/
+        /*    inset: anchor(bottom) auto auto anchor(left);*/
+        /*}*/
+
+
+    </style>
+</head>
+<body>
+
+
+<button popovertarget="my-popover">Open Popover</button>
+<div    popover    id="my-popover">Greetings from popover=auto !</div>
+
+
+<div id="source2" popovertarget="popover2">
+    Just some arbitrary div that has a popover on hover
+</div>
+<div popover id="popover2">Greetings toggles popover via JS !</div>
+
+<script>
+    source2.onmouseenter = _ => popover2.togglePopover();
+    source2.onmouseleave = _ => popover2.togglePopover();
+</script>
+
+<div id="source3" popovertarget="popover3">
+    Popover on hover but next to trigger
+    <div popover id="popover3">Close popover</div>
+</div>
+
+<script>
+    const pos = source3.getBoundingClientRect();
+    popover3.style.setProperty("left", pos.left + "px");
+    popover3.style.setProperty("top",  pos.top + pos.height + "px");
+
+    source3.onmouseenter = _ => popover3.togglePopover();
+    source3.onmouseleave = _ => popover3.togglePopover();
+</script>
+
+
+</body>
+</html>
