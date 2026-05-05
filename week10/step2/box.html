@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3D Scene</title>
+    <link rel="stylesheet" href="../box/scene/scene.css">
+    <script src="../box/scene/scene.js"></script>
+    <style>
+        html {
+            overscroll-behavior:    none;
+        }
+
+        body {
+            min-height:             100dvh;
+            display:                grid;
+            grid-template-columns:  100%;
+            grid-template-rows:     1fr max-content;
+            margin:                 0;
+            background:             linear-gradient(in srgb-linear, blue, orange);
+        }
+
+        footer {
+            padding:            1lh;
+            display:            grid;
+            place-items:        center;
+            color:              white;
+            font-size:          clamp(1rem, 5cqmin, 5rem);
+        }
+        .boxshadow {
+            grid-area:          1/1;
+            --box-width:        20;
+            width:              calc(var(--box-width) * 1cqmin);
+            aspect-ratio:       1 / 1;
+            background-color:   #5d008b80;
+            filter:             blur(3cqmin);
+        }
+        .shadowAnim {
+            animation: shadowAnimation 2s ease-in-out;
+        }
+        @keyframes shadowAnimation {
+              0% { scale: 1;   rotate: 0deg; }
+             50% { scale: 1.3; rotate: 360deg; filter: blur(8cqmin);}
+            100% { scale: 1;   rotate: 180deg; }
+
+        }
+        /* provides the logical group */
+        .box {
+            grid-area:          1/1;
+            --box-width:        20;
+            --z-center:         calc(1cqmin * var(--box-width) / 2);
+            width:              calc(var(--box-width) * 1cqmin);
+            aspect-ratio:       1 / 1;
+            display:            grid;                              /* child positioning  */
+            transform-style:    preserve-3d;                       /* put children in our 3d space */
+            translate:          0 0 var(--z-center);
+            --rotate-x:         0;
+            --rotate-y:         0;
+        }
+
+        /* all children go directly on top of each other */
+        .box > * {
+            grid-area:          1/1;
+        }
+
+
+        /* the transform origin for rotate is center by default, so rotations must first */
+        /* put the respective face in the the center, then rotate.            */
+
+        .front  {transform:                 translateZ(var(--z-center));}  /* move front to center */
+        .back   {transform: rotateY(180deg) translateZ(var(--z-center));}  /* center, then around Y-axis to the back */
+        .left   {transform: rotateY(-90deg) translateZ(var(--z-center));}  /* center, then around Y-axis to the left */
+        .right  {transform: rotateY( 90deg) translateZ(var(--z-center));}  /* center, then around Y-axis to the right */
+        .top    {transform: rotateX( 90deg) translateZ(var(--z-center));}  /* center, then around X-axis to the top */
+        .bottom {transform: rotateX(-90deg) translateZ(var(--z-center));}  /* center, then around X-axis to the bottom */
+
+        .face {
+            background-image:   linear-gradient(20deg in srgb-linear, #5d008bc0, 40%, darkgoldenrod, 60%, #5d008bc0);
+            box-shadow:         0 0 2cqmin #5d008b inset;
+            border-radius:      3%;
+            display:            grid;
+            place-items:        center;
+        }
+        .throwDice {
+            animation: throwAnimation 2s linear      forwards,
+                       liftAnimation  2s ease-in-out forwards;
+        }
+
+        @keyframes throwAnimation {
+              0%    {transform: rotateX(0deg)   rotateY(0deg)      ;}
+             75%    {transform: rotateX(360deg) rotateY(360deg)    ;}
+             75.01% {transform: rotateX(0deg)   rotateY(0deg)      ;}
+            100%    {transform: rotateX(calc(var(--rotate-x)*1deg))
+                                rotateY(calc(var(--rotate-y)*1deg));}
+        }
+        @keyframes liftAnimation {
+            0%  {translate: 0 0 var(--z-center)                 ;}
+            50% {translate: 0 0 calc(4 * var(--z-center))       ;}
+           100% {translate: 0 0 var(--z-center)                 ;}
+        }
+
+        .dot {
+            background-color:   greenyellow;
+            width:              4cqmin;
+            aspect-ratio:       1/1;
+            border-radius:      50%;
+            grid-area:          1/1;
+            box-shadow:         .15cqmin .15cqmin .5cqmin #5d008b inset;
+        }
+
+    </style>
+</head>
+<body>
+<main id="main" class="scene3d noSelection">
+    <div class="coords" style="
+        --coords-rotate-x:  70;
+        --coords-rotate-y: -25;
+">
+        <div class="boxshadow" id="boxshadow"></div>
+        <div class="box" id="dice" >
+             <div onclick="throwDice()" class="face front">
+                 <div class="dot"></div>
+             </div>
+             <div onclick="throwDice()" class="face back" >
+                 <div class="dot" style="translate: -100% -120%;"></div>
+                 <div class="dot" style="translate: -100%    0%;"></div>
+                 <div class="dot" style="translate: -100%  120%;"></div>
+                 <div class="dot" style="translate:  100% -120%;"></div>
+                 <div class="dot" style="translate:  100%    0%;"></div>
+                 <div class="dot" style="translate:  100%  120%;"></div>
+             </div>
+             <div onclick="throwDice()" class="face left" >
+                 <div class="dot" style="translate: -100% -100%;"></div>
+                 <div class="dot" ></div>
+                 <div class="dot" style="translate:  100% 100%;"></div>
+             </div>
+             <div onclick="throwDice()" class="face right">
+                 <div class="dot" style="translate: -100% -100%;"></div>
+                 <div class="dot" style="translate: -100% 100%;"></div>
+                 <div class="dot" style="translate:  100% -100%;"></div>
+                 <div class="dot" style="translate:  100% 100%;"></div>
+             </div>
+             <div onclick="throwDice()" class="face top"  >
+                 <div class="dot" style="translate: -100% -100%;"></div>
+                 <div class="dot" style="translate: -100% 100%;"></div>
+                 <div class="dot" ></div>
+                 <div class="dot" style="translate:  100% -100%;"></div>
+                 <div class="dot" style="translate:  100% 100%;"></div>
+             </div>
+             <div onclick="throwDice()" class="face bottom">
+                 <div class="dot" style="translate: -100% -100%;"></div>
+                 <div class="dot" style="translate:  100% 100%;"></div>
+             </div>
+         </div>
+    </div>
+</main>
+<footer>
+    Click to throw dice. Use mouse or touch to rotate the coords.
+</footer>
+
+<script>
+
+    registerForMouseAndTouch(main);
+
+    const throwDice = () => {
+        const xy = [[0, 0], [90, 0], [0, 90], [0, -90], [-90, 0], [180, 0]]
+        const rotIdx = Math.floor(Math.random() * 6);
+        dice.style.setProperty("--rotate-x", xy[rotIdx][0]);
+        dice.style.setProperty("--rotate-y", xy[rotIdx][1]);
+        dice.classList.remove("throwDice");
+        boxshadow.classList.remove("shadowAnim");
+        setTimeout(_=> {
+            dice.classList.add("throwDice");
+            boxshadow.classList.add("shadowAnim");
+        },0);
+    };
+
+</script>
+</body>
+</html>
