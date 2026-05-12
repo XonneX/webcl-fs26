@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo App</title>
+</head>
+<body>
+
+<div id="out"></div>
+
+<script>
+
+    fetch('https://jsonplaceholder.typicode.com/todos/1')
+        .then( resp => resp.json())
+        .then( todo => console.log(todo.title))
+        .catch( err => console.error(err) )
+        .finally(() => console.info("done"))
+    ;
+
+</script>
+
+</body>
+</html>

@@ -80,12 +80,12 @@
         /* the transform origin for rotate is center by default, so rotations must first */
         /* put the respective face in the the center, then rotate.            */
 
-        /*.front  {transform:                 translateZ(var(--z-center));}  !* move front to center *!*/
-        /*.back   {transform: rotateY(180deg) translateZ(var(--z-center));}  !* center, then around Y-axis to the back *!*/
-        /*.left   {transform: rotateY(-90deg) translateZ(var(--z-center));}  !* center, then around Y-axis to the left *!*/
-        /*.right  {transform: rotateY( 90deg) translateZ(var(--z-center));}  !* center, then around Y-axis to the right *!*/
-        /*.top    {transform: rotateX( 90deg) translateZ(var(--z-center));}  !* center, then around X-axis to the top *!*/
-        /*.bottom {transform: rotateX(-90deg) translateZ(var(--z-center));}  !* center, then around X-axis to the bottom *!*/
+        .front  {transform:                 translateZ(var(--z-center));}  /* move front to center */
+        .back   {transform: rotateY(180deg) translateZ(var(--z-center));}  /* center, then around Y-axis to the back */
+        .left   {transform: rotateY(-90deg) translateZ(var(--z-center));}  /* center, then around Y-axis to the left */
+        .right  {transform: rotateY( 90deg) translateZ(var(--z-center));}  /* center, then around Y-axis to the right */
+        .top    {transform: rotateX( 90deg) translateZ(var(--z-center));}  /* center, then around X-axis to the top */
+        .bottom {transform: rotateX(-90deg) translateZ(var(--z-center));}  /* center, then around X-axis to the bottom */
 
         .face {
             background-color: #0baadc;
@@ -102,12 +102,12 @@
         --coords-rotate-y:   0;
 ">
         <div class="box" >
-<!--             <div class="face front"></div>-->
-<!--             <div class="face back" ></div>-->
-<!--             <div class="face left" ></div>-->
-<!--             <div class="face right"></div>-->
-<!--             <div class="face top"  ></div>-->
-<!--             <div class="face bottom"></div>-->
+             <div class="face front"></div>
+             <div class="face back" ></div>
+             <div class="face left" ></div>
+             <div class="face right"></div>
+             <div class="face top"  ></div>
+             <div class="face bottom"></div>
          </div>
     </div>
 </main>
