@@ -25,7 +25,7 @@
 
 /**
  * @typedef UserService
- * @property {(number) => Promise<User>} getOne
+ * @property {(id: number) => Promise<User>} getOne
  */
 
 /**
