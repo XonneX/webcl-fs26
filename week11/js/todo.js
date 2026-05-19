@@ -1,9 +1,9 @@
-import { ObservableList }          from "../../kolibri-dist-2026-02-15/kolibri/observable.js";
+import {ObservableList} from "../../kolibri-dist-2026-02-15/kolibri/observable.js";
 import {Attribute, EDITABLE, VALID, VALUE} from "../../kolibri-dist-2026-02-15/kolibri/presentationModel.js";
-import { Scheduler }               from "../../kolibri-dist-2026-02-15/kolibri/dataflow/dataflow.js";
-import { todoItemProjector }       from "./todoProjector.js";
+import {Scheduler} from "../../kolibri-dist-2026-02-15/kolibri/dataflow/dataflow.js";
+import {todoItemProjector} from "./todoProjector.js";
 
-export { TodoController, TodoItemsView, TodoTotalView, TodoOpenView}
+export {TodoController, TodoItemsView, TodoTotalView, TodoOpenView}
 
 /**
  *
@@ -16,32 +16,32 @@ const TodoController = (todoService, userService) => {
     const Todo = () => {                               // facade
         const textAttr = Attribute("text");
         const doneAttr = Attribute(false);
-        const idAttr = Attribute("id");
-        const userIdAttr = Attribute("userId");
-        const userAttr = Attribute("user");
+        const idAttr = Attribute(-1);
+        const userIdAttr = Attribute(1);
+        const userAttr = Attribute(undefined);
 
         // textAttr.setConverter( input => input.toUpperCase() );
-        textAttr.setValidator( input => input.length >= 3   );
+        textAttr.setValidator(input => input.length >= 3);
 
         // business rules / constraints (the text is only editable if not done)
-        doneAttr.getObs(VALUE).onChange( isDone => textAttr.getObs(EDITABLE,!isDone).setValue(!isDone));
+        doneAttr.getObs(VALUE).onChange(isDone => textAttr.getObs(EDITABLE, !isDone).setValue(!isDone));
 
         return {
-            getDone:                doneAttr.getObs(VALUE).getValue,
-            setDone:                doneAttr.getObs(VALUE).setValue,
-            onDoneChanged:          doneAttr.getObs(VALUE).onChange,
-            getText:                textAttr.getObs(VALUE).getValue,
-            setText:                textAttr.setConvertedValue,
-            onTextChanged:          textAttr.getObs(VALUE).onChange,
-            onTextValidChanged:     textAttr.getObs(VALID).onChange,
-            onTextEditableChanged:  textAttr.getObs(EDITABLE).onChange,
-            getId:                  idAttr.getObs(VALUE).getValue,
-            setId:                  idAttr.getObs(VALUE).setValue,
-            getUserId:              userIdAttr.getObs(VALUE).getValue,
-            setUserId:              userIdAttr.getObs(VALUE).setValue,
-            getUser:                userAttr.getObs(VALUE).getValue,
-            setUser:                userAttr.getObs(VALUE).setValue,
-            onUserChange:           userAttr.getObs(VALUE).onChange,
+            getDone: doneAttr.getObs(VALUE).getValue,
+            setDone: doneAttr.getObs(VALUE).setValue,
+            onDoneChanged: doneAttr.getObs(VALUE).onChange,
+            getText: textAttr.getObs(VALUE).getValue,
+            setText: textAttr.setConvertedValue,
+            onTextChanged: textAttr.getObs(VALUE).onChange,
+            onTextValidChanged: textAttr.getObs(VALID).onChange,
+            onTextEditableChanged: textAttr.getObs(EDITABLE).onChange,
+            getId: idAttr.getObs(VALUE).getValue,
+            setId: idAttr.getObs(VALUE).setValue,
+            getUserId: userIdAttr.getObs(VALUE).getValue,
+            setUserId: userIdAttr.getObs(VALUE).setValue,
+            getUser: userAttr.getObs(VALUE).getValue,
+            setUser: userAttr.getObs(VALUE).setValue,
+            onUserChange: userAttr.getObs(VALUE).onChange,
         }
     };
 
@@ -49,6 +49,35 @@ const TodoController = (todoService, userService) => {
 
     const addTodo = () => {
         const newTodo = Todo();
+        userService.getOne(newTodo.getUserId())
+            .then(user => {
+                newTodo.setUser(user);
+            })
+            .catch(err => console.log(err));
+        newTodo.onDoneChanged((value, oldValue) => {
+            if (value === oldValue) {
+                return;
+            }
+
+            todoService.updateOne(
+                newTodo.getId(),
+                newTodo.getUserId(),
+                newTodo.getText(),
+                newTodo.getDone(),
+            )
+        });
+        newTodo.onTextChanged((value, oldValue) => {
+            if (value === oldValue) {
+                return;
+            }
+
+            todoService.updateOne(
+                newTodo.getId(),
+                newTodo.getUserId(),
+                newTodo.getText(),
+                newTodo.getDone(),
+            )
+        });
         todoModel.add(newTodo);
         return newTodo;
     };
@@ -66,25 +95,31 @@ const TodoController = (todoService, userService) => {
                         newTodo.setUser(user);
                     })
                     .catch(err => console.log(err));
+                newTodo.onDoneChanged((value, oldValue) => {
+                    if (value === oldValue) {
+                        return;
+                    }
+
+                    todoService.updateOne(
+                        newTodo.getId(),
+                        newTodo.getUserId(),
+                        newTodo.getText(),
+                        newTodo.getDone(),
+                    )
+                });
+                newTodo.onTextChanged((value, oldValue) => {
+                    if (value === oldValue) {
+                        return;
+                    }
+
+                    todoService.updateOne(
+                        newTodo.getId(),
+                        newTodo.getUserId(),
+                        newTodo.getText(),
+                        newTodo.getDone(),
+                    )
+                });
                 todoModel.add(newTodo);
-                newTodo.onDoneChanged(() => {
-                    console.log("done changed");
-                    todoService.updateOne(
-                        newTodo.getId(),
-                        newTodo.getUserId(),
-                        newTodo.getText(),
-                        newTodo.getDone(),
-                    )
-                });
-                newTodo.onTextChanged(() => {
-                    console.log("text changed");
-                    todoService.updateOne(
-                        newTodo.getId(),
-                        newTodo.getUserId(),
-                        newTodo.getText(),
-                        newTodo.getDone(),
-                    )
-                });
             }
         })
         .catch(err => console.error(err))
@@ -95,16 +130,23 @@ const TodoController = (todoService, userService) => {
     });
 
     todoModel.onAdd((todo, _) => {
-        todoService.createOne(todo.getUserId(), todo.getText(), todo.getDone());
+        if (todo.getId() !== -1) {
+            return;
+        }
+
+        todoService.createOne(todo.getUserId(), todo.getText(), todo.getDone())
+            .then((updatedTodo) => {
+                todo.setId(updatedTodo.id);
+            });
     });
 
     return {
-        numberOfTodos:      todoModel.count,
-        numberOfOpenTasks:  () => todoModel.countIf(todo => ! todo.getDone() ),
-        addTodo:            addTodo,
-        removeTodo:         todoModel.del,
-        onTodoAdd:          todoModel.onAdd,
-        onTodoRemove:       todoModel.onDel,
+        numberOfTodos: todoModel.count,
+        numberOfOpenTasks: () => todoModel.countIf(todo => !todo.getDone()),
+        addTodo: addTodo,
+        removeTodo: todoModel.del,
+        onTodoAdd: todoModel.onAdd,
+        onTodoRemove: todoModel.onDel,
         removeTodoRemoveListener: todoModel.removeDeleteListener, // only for the test case, not used below
     }
 };

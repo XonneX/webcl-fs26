@@ -75,11 +75,26 @@ const ProdTodoService = (baseUrl) => {
  * @constructor
  */
 const ProdUserService = (baseUrl) => {
+    const usersById = new Map();
+
     const getOne = async (id) => {
         console.debug("ProdUserService::getOne", id);
 
-        return fetch(`${baseUrl}/users/${id}`)
-            .then(res => res.json());
+        if (usersById.has(id)) {
+            console.debug("ProdUserService::getOne cache hit", id);
+            return usersById.get(id);
+        }
+
+        const promise = fetch(`${baseUrl}/users/${id}`)
+            .then(res => res.json())
+            .catch(err => {
+                usersById.delete(id);
+                throw err;
+            });
+
+        usersById.set(id, promise);
+
+        return promise;
     }
 
     return {

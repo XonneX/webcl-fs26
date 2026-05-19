@@ -46,7 +46,11 @@ const userProjector = todo => {
     spanElement.classList.add("user");
 
     todo.onUserChange(user => {
-        spanElement.innerHTML = "By " + user.name;
+        if (user) {
+            spanElement.innerHTML = "By " + user.name;
+        } else {
+            spanElement.innerHTML = "By Unknown";
+        }
     });
 
     return spanElement;
@@ -71,6 +75,9 @@ const todoItemProjector = (todoController, rootElement, todo) => {
         rootElement.removeChild(deleteButton);
         rootElement.removeChild(inputElement);
         rootElement.removeChild(checkboxElement);
+        rootElement.removeChild(spacer1Element);
+        rootElement.removeChild(userElement);
+        rootElement.removeChild(spacer2Element);
         removeMe();
     } );
 
