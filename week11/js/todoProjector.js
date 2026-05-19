@@ -41,6 +41,17 @@ const todoDoneProjector = todo => {
     return checkboxElement;
 };
 
+const userProjector = todo => {
+    const spanElement = document.createElement("span");
+    spanElement.classList.add("user");
+
+    todo.onUserChange(user => {
+        spanElement.innerHTML = user.name;
+    });
+
+    return spanElement;
+};
+
 const todoItemProjector = (todoController, rootElement, todo) => {
 
     const deleteButton      = document.createElement("Button");
@@ -50,6 +61,10 @@ const todoItemProjector = (todoController, rootElement, todo) => {
 
     const inputElement      = todoTextProjector(todo);
     const checkboxElement   = todoDoneProjector(todo);
+
+    const spacer1Element = document.createElement("span");
+    const userElement = userProjector(todo);
+    const spacer2Element = document.createElement("span");
 
     todoController.onTodoRemove( (removedTodo, removeMe) => {
         if (removedTodo !== todo) return;
@@ -62,4 +77,7 @@ const todoItemProjector = (todoController, rootElement, todo) => {
     rootElement.appendChild(deleteButton);
     rootElement.appendChild(inputElement);
     rootElement.appendChild(checkboxElement);
+    rootElement.appendChild(spacer1Element);
+    rootElement.appendChild(userElement);
+    rootElement.appendChild(spacer2Element);
 };

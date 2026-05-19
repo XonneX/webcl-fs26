@@ -16,15 +16,16 @@ export {DevServiceFactory};
 
 /**
  * @typedef TodoService
- * @property {(number) => Promise<Todo>} getTodo
+ * @property {(id: number) => Promise<Todo>} getOne
  * @property {() => Promise<Todo[]>} getAll
+ * @property {(id: number, userId: number, title: string, completed: boolean) => Promise<Todo>} updateOne
+ * @property {(id: number) => Promise<Todo>} deleteOne
  */
 
 /**
  * @typedef UserService
- * @property {(number) => Promise<User>} getUser
+ * @property {(number) => Promise<User>} getOne
  */
-
 
 /**
  * @typedef ServiceFactory
@@ -39,23 +40,45 @@ export {DevServiceFactory};
  * @constructor
  */
 const DevTodoService = () => {
-    const getTodo = async (id) => {
+    const getOne = async (id) => {
+        console.debug("DevTodoService::getOne", id);
+
         return {
             id,
             title: "Dev Todo " + id,
+            userId: 1,
         };
     };
 
     const getAll = async () => {
+        console.debug("DevTodoService::getAll");
+
         return [
-            await getTodo(1),
-            await getTodo(2),
+            await getOne(1),
+            await getOne(2),
         ];
     };
 
+    const updateOne = async (id, userId, title, completed) => {
+        console.debug("DevTodoService::updateOne", id, userId, title, completed);
+
+        return {
+            id,
+            userId,
+            title,
+            completed
+        };
+    };
+
+    const deleteOne = async (id) => {
+        console.debug("DevTodoService::deleteOne", id);
+    };
+
     return {
-        getTodo,
+        getOne,
         getAll,
+        updateOne,
+        deleteOne,
     };
 };
 
@@ -64,15 +87,17 @@ const DevTodoService = () => {
  * @constructor
  */
 const DevUserService = () => {
-    const getUser = async (id) => {
+    const getOne = async (id) => {
+        console.debug("DevUserService::getOne", id);
+
         return {
             id,
-            name: "Dev User",
+            name: "Dev User " + id,
         }
     }
 
     return {
-        getUser,
+        getOne,
     };
 };
 

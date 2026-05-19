@@ -1,4 +1,4 @@
-import {DevServiceFactory} from "./app.js";
+import {DevServiceFactory} from "./service.js";
 import {TodoController, TodoOpenView, TodoTotalView, TodoItemsView} from './todo.js';
 
 const factory = DevServiceFactory();
