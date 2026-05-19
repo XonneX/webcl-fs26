@@ -47,6 +47,21 @@ const TodoController = (todoService, userService) => {
 
     const todoModel = ObservableList([]); // observable array of Todos, this state is private
 
+    const updateTodo = todo => {
+        return (value, oldValue) => {
+            if (value === oldValue) {
+                return;
+            }
+
+            todoService.updateOne(
+                todo.getId(),
+                todo.getUserId(),
+                todo.getText(),
+                todo.getDone(),
+            );
+        };
+    };
+
     const addTodo = () => {
         const newTodo = Todo();
         userService.getOne(newTodo.getUserId())
@@ -54,31 +69,13 @@ const TodoController = (todoService, userService) => {
                 newTodo.setUser(user);
             })
             .catch(err => console.log(err));
-        newTodo.onDoneChanged((value, oldValue) => {
-            if (value === oldValue) {
-                return;
-            }
 
-            todoService.updateOne(
-                newTodo.getId(),
-                newTodo.getUserId(),
-                newTodo.getText(),
-                newTodo.getDone(),
-            )
-        });
-        newTodo.onTextChanged((value, oldValue) => {
-            if (value === oldValue) {
-                return;
-            }
+        const updateHandler = updateTodo(newTodo);
 
-            todoService.updateOne(
-                newTodo.getId(),
-                newTodo.getUserId(),
-                newTodo.getText(),
-                newTodo.getDone(),
-            )
-        });
+        newTodo.onDoneChanged(updateHandler);
+        newTodo.onTextChanged(updateHandler);
         todoModel.add(newTodo);
+
         return newTodo;
     };
 
@@ -95,30 +92,11 @@ const TodoController = (todoService, userService) => {
                         newTodo.setUser(user);
                     })
                     .catch(err => console.log(err));
-                newTodo.onDoneChanged((value, oldValue) => {
-                    if (value === oldValue) {
-                        return;
-                    }
 
-                    todoService.updateOne(
-                        newTodo.getId(),
-                        newTodo.getUserId(),
-                        newTodo.getText(),
-                        newTodo.getDone(),
-                    )
-                });
-                newTodo.onTextChanged((value, oldValue) => {
-                    if (value === oldValue) {
-                        return;
-                    }
+                const updateHandler = updateTodo(newTodo);
+                newTodo.onDoneChanged(updateHandler);
+                newTodo.onTextChanged(updateHandler);
 
-                    todoService.updateOne(
-                        newTodo.getId(),
-                        newTodo.getUserId(),
-                        newTodo.getText(),
-                        newTodo.getDone(),
-                    )
-                });
                 todoModel.add(newTodo);
             }
         })
