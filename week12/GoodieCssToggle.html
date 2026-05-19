@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSS Toggle</title>
+    <style>
+        :root {
+            --OFF: ;
+        }
+
+        .spaceToggle {
+            background: var(--toggle, lightblue);
+            border: 1px var(--toggle, solid) blue;
+            margin: 1em;
+            padding: .2em 1em;
+        }
+
+        /*.spaceToggle:hover {*/
+        /*    --toggle: var(--OFF);*/
+        /*}*/
+
+        /*:checked + .spaceToggle {*/
+        /*    --toggle: var(--OFF);*/
+        /*}*/
+
+
+    </style>
+
+</head>
+<body>
+
+<div class="spaceToggle" >
+    Outer
+    <div>Special styling is ON </div>
+</div>
+<div class="spaceToggle" style="--toggle:var(--OFF)">
+    Outer
+    <div>Special styling is OFF (suppress certain parts of the style)</div>
+</div>
+
+<input type="checkbox">
+<div class="spaceToggle" >
+    Outer
+    <div>Special styling is suppressed via checkbox </div>
+</div>
+
+<div>
+    All shamelessly <a href="https://www.youtube.com/watch?v=ZuZizqDF4q8">stolen</a>.
+</div>
+
+</body>
+</html>
