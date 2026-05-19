@@ -1,4 +1,4 @@
-export {ServiceFactory};
+export {DevServiceFactory};
 
 /**
  * @returns {TodoService}
@@ -72,7 +72,7 @@ const DevUserService = () => {
  * @returns {ServiceFactory}
  * @constructor
  */
-const ServiceFactory = () => {
+const DevServiceFactory = () => {
     const createTodoService = () => {
         return DevTodoService();
     };

@@ -20,7 +20,7 @@ const TodoController = (todoService, userService) => {
         const userIdAttr = Attribute("userId");
         const userAttr = Attribute("user");
 
-        textAttr.setConverter( input => input.toUpperCase() );
+        // textAttr.setConverter( input => input.toUpperCase() );
         textAttr.setValidator( input => input.length >= 3   );
 
         // business rules / constraints (the text is only editable if not done)
@@ -66,19 +66,25 @@ const TodoController = (todoService, userService) => {
                         newTodo.setUser(user);
                     })
                     .catch(err => console.log(err));
+                todoModel.add(newTodo);
                 newTodo.onDoneChanged(() => {
+                    console.log("done changed");
                     todoService.updateOne(
                         newTodo.getId(),
                         newTodo.getUserId(),
                         newTodo.getText(),
                         newTodo.getDone(),
-                    ).then((data) => {
-                        newTodo.setUserId(data.userId);
-                        newTodo.setText(data.title);
-                        newTodo.setDone(data.completed);
-                    });
+                    )
                 });
-                todoModel.add(newTodo);
+                newTodo.onTextChanged(() => {
+                    console.log("text changed");
+                    todoService.updateOne(
+                        newTodo.getId(),
+                        newTodo.getUserId(),
+                        newTodo.getText(),
+                        newTodo.getDone(),
+                    )
+                });
             }
         })
         .catch(err => console.error(err))

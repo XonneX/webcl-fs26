@@ -1,7 +1,9 @@
-import {ServiceFactory} from "./prod.js";
+import {DevServiceFactory} from "./dev.js";
+import {ProdServiceFactory} from "./prod.js";
 import {TodoController, TodoOpenView, TodoTotalView, TodoItemsView} from './todo.js';
 
-const factory = ServiceFactory();
+// const factory = DevServiceFactory();
+const factory = ProdServiceFactory('https://jsonplaceholder.typicode.com');
 
 const todoService = factory.createTodoService();
 const userService = factory.createUserService();

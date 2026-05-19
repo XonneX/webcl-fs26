@@ -1,42 +1,47 @@
-export {ServiceFactory};
+export {ProdServiceFactory};
 
 /**
  * @returns {TodoService}
  * @constructor
  */
-const DevTodoService = () => {
-    const getOne = async (id) => {
-        console.debug("DevTodoService::getOne", id);
+const ProdTodoService = (baseUrl) => {
+    const getOne = (id) => {
+        console.debug("ProdTodoService::getOne", id);
 
-        return {
-            id,
-            title: "Dev Todo " + id,
-            userId: 1,
-        };
+        return fetch(`${baseUrl}/todos/${id}`)
+            .then(res => res.json());
     };
 
     const getAll = async () => {
-        console.debug("DevTodoService::getAll");
+        console.debug("ProdTodoService::getAll");
 
-        return [
-            await getOne(1),
-            await getOne(2),
-        ];
+        return fetch(`${baseUrl}/todos`)
+            .then(res => res.json());
     };
 
     const updateOne = async (id, userId, title, completed) => {
-        console.debug("DevTodoService::updateOne", id, userId, title, completed);
+        console.debug("ProdTodoService::updateOne", id, userId, title, completed);
 
-        return {
-            id,
-            userId,
-            title,
-            completed
-        };
+        return fetch(`${baseUrl}/todos/${id}`, {
+            method: "PUT",
+            body: JSON.stringify({
+                id: id,
+                userId: userId,
+                title: title,
+                completed: completed,
+            }),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        })
+            .then(res => res.json());
     };
 
     const deleteOne = async (id) => {
-        console.debug("DevTodoService::deleteOne", id);
+        console.debug("ProdTodoService::deleteOne", id);
+
+        return fetch(`${baseUrl}/todos/${id}`, {method: 'DELETE'})
+            .then(res => res.json());
     };
 
     return {
@@ -51,14 +56,12 @@ const DevTodoService = () => {
  * @returns {UserService}
  * @constructor
  */
-const DevUserService = () => {
+const ProdUserService = (baseUrl) => {
     const getOne = async (id) => {
-        console.debug("DevUserService::getOne", id);
+        console.debug("ProdUserService::getOne", id);
 
-        return {
-            id,
-            name: "Dev User " + id,
-        }
+        return fetch(`${baseUrl}/users/${id}`)
+            .then(res => res.json());
     }
 
     return {
@@ -72,13 +75,13 @@ const DevUserService = () => {
  * @returns {ServiceFactory}
  * @constructor
  */
-const ServiceFactory = () => {
+const ProdServiceFactory = (baseUrl) => {
     const createTodoService = () => {
-        return DevTodoService();
+        return ProdTodoService(baseUrl);
     };
 
     const createUserService = () => {
-        return DevUserService();
+        return ProdUserService(baseUrl);
     };
 
     return {
