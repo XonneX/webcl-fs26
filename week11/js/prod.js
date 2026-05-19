@@ -37,6 +37,23 @@ const ProdTodoService = (baseUrl) => {
             .then(res => res.json());
     };
 
+    const createOne = async (userId, title, completed) => {
+        console.debug("ProdTodoService::createOne", userId, title, completed);
+
+        return fetch(`${baseUrl}/todos`, {
+            method: "POST",
+            body: JSON.stringify({
+                userId: userId,
+                title: title,
+                completed: completed,
+            }),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        })
+            .then(res => res.json());
+    };
+
     const deleteOne = async (id) => {
         console.debug("ProdTodoService::deleteOne", id);
 
@@ -48,6 +65,7 @@ const ProdTodoService = (baseUrl) => {
         getOne,
         getAll,
         updateOne,
+        createOne,
         deleteOne,
     };
 };

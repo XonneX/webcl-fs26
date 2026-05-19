@@ -35,6 +35,19 @@ const DevTodoService = () => {
         };
     };
 
+    const createOne = async (userId, title, completed) => {
+        console.debug("DevTodoService::createOne", userId, title, completed);
+
+        const id = Math.floor(Math.random() * 100);
+
+        return {
+            id,
+            userId,
+            title,
+            completed
+        };
+    };
+
     const deleteOne = async (id) => {
         console.debug("DevTodoService::deleteOne", id);
     };
@@ -43,6 +56,7 @@ const DevTodoService = () => {
         getOne,
         getAll,
         updateOne,
+        createOne,
         deleteOne,
     };
 };

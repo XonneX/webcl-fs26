@@ -17,6 +17,7 @@
  * @property {(id: number) => Promise<Todo>} getOne
  * @property {() => Promise<Todo[]>} getAll
  * @property {(id: number, userId: number, title: string, completed: boolean) => Promise<Todo>} updateOne
+ * @property {(userId: number, title: string, completed: boolean) => Promise<Todo>} createOne
  * @property {(id: number) => Promise<Todo>} deleteOne
  */
 

@@ -94,6 +94,10 @@ const TodoController = (todoService, userService) => {
         todoService.deleteOne(todo.getId());
     });
 
+    todoModel.onAdd((todo, _) => {
+        todoService.createOne(todo.getUserId(), todo.getText(), todo.getDone());
+    });
+
     return {
         numberOfTodos:      todoModel.count,
         numberOfOpenTasks:  () => todoModel.countIf(todo => ! todo.getDone() ),
