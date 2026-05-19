@@ -1,7 +1,7 @@
-import {DevServiceFactory} from "./service.js";
+import {ServiceFactory} from "./prod.js";
 import {TodoController, TodoOpenView, TodoTotalView, TodoItemsView} from './todo.js';
 
-const factory = DevServiceFactory();
+const factory = ServiceFactory();
 
 const todoService = factory.createTodoService();
 const userService = factory.createUserService();
