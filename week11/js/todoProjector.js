@@ -46,7 +46,7 @@ const userProjector = todo => {
     spanElement.classList.add("user");
 
     todo.onUserChange(user => {
-        spanElement.innerHTML = user.name;
+        spanElement.innerHTML = "By " + user.name;
     });
 
     return spanElement;
