@@ -10,6 +10,8 @@
  * @typedef User
  * @property {number} id
  * @property {string} name
+ * @property {string} username
+ * @property {string} email
  */
 
 /**

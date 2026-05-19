@@ -42,14 +42,24 @@ const todoDoneProjector = todo => {
 };
 
 const userProjector = todo => {
-    const spanElement = document.createElement("span");
-    spanElement.classList.add("user");
+    const spanElement = document.createElement("div");
+    spanElement.classList.add("user", "tooltip");
+
+    const textElement = document.createElement("span");
+
+    const tooltipElement = document.createElement("span");
+    tooltipElement.classList.add("tooltiptext");
+
+    spanElement.append(textElement, tooltipElement);
 
     todo.onUserChange(user => {
         if (user) {
-            spanElement.innerHTML = "By " + user.name;
+            textElement.textContent = "By " + user.name;
+            tooltipElement.innerHTML =
+                `Username: ${user.username}<br>Email: ${user.email}`;
         } else {
-            spanElement.innerHTML = "By Unknown";
+            textElement.textContent = "By Unknown";
+            tooltipElement.textContent = "";
         }
     });
 
